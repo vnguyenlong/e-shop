@@ -34,8 +34,6 @@ router.post('/' , async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    console.log(req.params.id);
-    console.log(req.body)
     const category = await Category.findByIdAndUpdate(
         req.params.id,
         {
