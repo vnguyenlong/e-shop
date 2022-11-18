@@ -92,11 +92,32 @@ router.post('/login', async (req, res) => {
             {expiresIn: '1d'}
         )
 
-        res.status(200).send({user: user.email, token: token})
+        res.status(200).send({user: user.email , token: token})
     } else {
         res.status(400).send('Sai mật khẩu');
     }
     
+})
+
+router.post('/register', async (req,res)=>{
+    let user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        passwordHash: bcrypt.hashSync(req.body.password, 10),
+        phone: req.body.phone,
+        isAdmin: req.body.isAdmin,
+        street: req.body.street,
+        apartment: req.body.apartment,
+        zip: req.body.zip,
+        city: req.body.city,
+        country: req.body.country,
+    })
+    user = await user.save();
+
+    if(!user)
+    return res.status(400).send('Đăng kí tài khoản không thành công !')
+
+    res.send(user);
 })
 
 router.delete('/:id', (req, res)=>{
