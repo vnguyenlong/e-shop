@@ -1,28 +1,28 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const authJwt = require('./helpers/jwt');
-const errorHandler = require('./helpers/error-handler');
-require('dotenv/config');
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const authJwt = require("./helpers/jwt");
+const errorHandler = require("./helpers/error-handler");
+require("dotenv/config");
 
 app.use(cors());
-app.options('*', cors());
+app.options("*", cors());
 
 //Middleware
 app.use(bodyParser.json());
-app.use(morgan('tiny'));
+app.use(morgan("tiny"));
 app.use(authJwt());
 app.use(errorHandler);
-
+app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 
 //Routers
-const categoriesRoutes = require('./routers/categories');
-const productsRoutes = require('./routers/products');
-const usersRoutes = require('./routers/users');
-const ordersRoutes = require('./routers/orders');
+const categoriesRoutes = require("./routers/categories");
+const productsRoutes = require("./routers/products");
+const usersRoutes = require("./routers/users");
+const ordersRoutes = require("./routers/orders");
 
 const api = process.env.API_URL;
 
@@ -33,20 +33,20 @@ app.use(`/${api}/products`, productsRoutes);
 app.use(`/${api}/users`, usersRoutes);
 app.use(`/${api}/orders`, ordersRoutes);
 
-
 //Database
-mongoose.connect(process.env.CONNECTION_STRING, {
+mongoose
+  .connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: 'eshop-database'
-})
-.then(() => {
-    console.log('Database Connection is ready...');
-})
-.catch((err) => {
+    dbName: "eshop-database",
+  })
+  .then(() => {
+    console.log("Database Connection is ready...");
+  })
+  .catch((err) => {
     console.error(err);
-})
+  });
 //Server
 app.listen(3000, () => {
-    console.log('server is running http://localhost:3000');
+  console.log("server is running http://localhost:3000");
 });
